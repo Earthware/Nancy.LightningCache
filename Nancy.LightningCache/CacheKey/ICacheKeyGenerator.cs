@@ -7,6 +7,6 @@ namespace Nancy.LightningCache.CacheKey
     /// </summary>
     public interface ICacheKeyGenerator
     {
-        string Get(Request request);
+        string Get(NancyContext context);
     }
 }

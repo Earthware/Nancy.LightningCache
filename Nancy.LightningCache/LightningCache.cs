@@ -109,7 +109,7 @@ namespace Nancy.LightningCache
                 if ((context.Request.Query as DynamicDictionary).ContainsKey(NO_REQUEST_CACHE_KEY))
                     return null;
 
-            var key = _cacheKeyGenerator.Get(context.Request);
+            var key = _cacheKeyGenerator.Get(context);
 
             if (string.IsNullOrEmpty(key))
                 return null;
@@ -122,7 +122,7 @@ namespace Nancy.LightningCache
             if (response.Expiration < DateTime.Now)
             {
                 var t = new Thread(HandleRequestAsync);
-                t.Start(context.Request);
+                t.Start(context);
             }
 
             //make damn sure the pre-requirements are met before returning a cached response
@@ -142,7 +142,7 @@ namespace Nancy.LightningCache
             if (context.Response is CachedResponse)
                 return;
 
-            var key = _cacheKeyGenerator.Get(context.Request);
+            var key = _cacheKeyGenerator.Get(context);
 
             if (string.IsNullOrEmpty(key))
                 return;
@@ -179,12 +179,13 @@ namespace Nancy.LightningCache
         {
             lock (Lock)
             {
-                var request = context as Request;
+                var nancycontext = context as NancyContext;
+                var request = nancycontext.Request;
 
                 if (request == null)
                     return;
 
-                var key = _cacheKeyGenerator.Get(request);
+                var key = _cacheKeyGenerator.Get(nancycontext);
 
                 if (string.IsNullOrEmpty(key))
                     return;

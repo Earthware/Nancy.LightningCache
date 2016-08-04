@@ -18,8 +18,9 @@ namespace Nancy.LightningCache.CacheKey
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public string Get(Request request)
+        public string Get(NancyContext context)
         {
+            var request = context.Request;
             if (request == null || request.Url == null)
                 return string.Empty;
 
